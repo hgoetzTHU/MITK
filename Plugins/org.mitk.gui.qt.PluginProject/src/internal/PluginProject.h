@@ -52,6 +52,7 @@ protected:
 
   /// \brief Called when the user clicks the GUI button
   void DoImageProcessing();
+  void DoTracking();
 
   Ui::PluginProjectControls m_Controls;
 };

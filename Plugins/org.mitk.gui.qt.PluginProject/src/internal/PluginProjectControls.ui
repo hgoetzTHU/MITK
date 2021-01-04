@@ -44,16 +44,16 @@
     <widget class="QmitkNavigationDataSourceSelectionWidget" name="YourWidget" native="true"/>
    </item>
    <item>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="buttonTracking">
      <property name="text">
-      <string>PushButton</string>
+      <string>press to set first point of distance measurement</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="labelDistance">
      <property name="text">
-      <string>Abstand:</string>
+      <string>Distance:</string>
      </property>
     </widget>
    </item>
