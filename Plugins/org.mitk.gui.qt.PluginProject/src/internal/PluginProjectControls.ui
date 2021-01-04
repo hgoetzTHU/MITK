@@ -41,6 +41,23 @@
     </widget>
    </item>
    <item>
+    <widget class="QmitkNavigationDataSourceSelectionWidget" name="YourWidget" native="true"/>
+   </item>
+   <item>
+    <widget class="QPushButton" name="pushButton">
+     <property name="text">
+      <string>PushButton</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Abstand:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <spacer name="spacer1">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -59,6 +76,14 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QmitkNavigationDataSourceSelectionWidget</class>
+   <extends>QWidget</extends>
+   <header>QmitkNavigationDataSourceSelectionWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

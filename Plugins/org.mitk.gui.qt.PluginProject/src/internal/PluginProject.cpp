@@ -24,9 +24,29 @@ See LICENSE.txt or http://www.mitk.org for details.
 
 // Qt
 #include <QMessageBox>
+#include <itksys/SystemTools.hxx>
 
 // mitk image
 #include <mitkImage.h>
+
+// PointSet
+#include <mitkPointSet.h>
+
+// Widgets
+#include <QmitkNavigationDataSourceSelectionWidget.h>
+#include <QWidget>
+
+// Window
+#include "QmitkRegisterClasses.h"
+#include "QmitkRenderWindow.h"
+
+//DataStorage
+#include <mitkCone.h>
+#include <mitkCylinder.h>
+#include <mitkDataNode.h>
+#include <mitkDataStorage.h>
+#include <mitkRenderWindow.h>
+#include <mitkStandaloneDataStorage.h>
 
 const std::string PluginProject::VIEW_ID = "org.mitk.views.pluginproject";
 
