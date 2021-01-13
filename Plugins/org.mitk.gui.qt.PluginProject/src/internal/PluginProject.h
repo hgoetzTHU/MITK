@@ -14,15 +14,18 @@ See LICENSE.txt or http://www.mitk.org for details.
 
 ===================================================================*/
 
-
 #ifndef PluginProject_h
 #define PluginProject_h
 
 #include <berryISelectionListener.h>
 
+#include <QTimer>
 #include <QmitkAbstractView.h>
 
 #include "ui_PluginProjectControls.h"
+#include <mitkPointSet.h>
+#include <mitkRenderWindow.h>
+#include <mitkStandaloneDataStorage.h>
 
 /**
   \brief PluginProject
@@ -41,6 +44,9 @@ class PluginProject : public QmitkAbstractView
 public:
   static const std::string VIEW_ID;
 
+public slots:
+  void PathTracking();
+
 protected:
   virtual void CreateQtPartControl(QWidget *parent) override;
 
@@ -53,6 +59,17 @@ protected:
   /// \brief Called when the user clicks the GUI button
   void DoImageProcessing();
   void DoTracking();
+  void TimerTracking();
+  void StopTracking();
+  
+
+  mitk::PointSet::Pointer PointSetTracking;
+  mitk::StandaloneDataStorage::Pointer DS;
+  mitk::RenderWindow::Pointer rdW;
+  mitk::DataNode::Pointer myDN;
+
+
+  QTimer *timer;
 
   Ui::PluginProjectControls m_Controls;
 };
