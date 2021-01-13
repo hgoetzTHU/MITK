@@ -25,6 +25,9 @@
      <property name="styleSheet">
       <string notr="true">QLabel { color: rgb(255, 0, 0) }</string>
      </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
      <property name="text">
       <string>Please select an image!</string>
      </property>
@@ -37,6 +40,16 @@
      </property>
      <property name="text">
       <string>Do Something</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="styleSheet">
+      <string notr="true">QLabel { color: rgb(255, 0, 0) }</string>
+     </property>
+     <property name="text">
+      <string>Please start the Virtual Tracker and select Tool 0!</string>
      </property>
     </widget>
    </item>
@@ -54,6 +67,20 @@
     <widget class="QLabel" name="labelDistance">
      <property name="text">
       <string>Distance:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="buttonPathTracking">
+     <property name="text">
+      <string>Start Path Tracking</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="buttonStopTracking">
+     <property name="text">
+      <string>Stop Path Tracking</string>
      </property>
     </widget>
    </item>
