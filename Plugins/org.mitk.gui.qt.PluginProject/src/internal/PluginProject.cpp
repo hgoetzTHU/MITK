@@ -14,7 +14,6 @@ See LICENSE.txt or http://www.mitk.org for details.
 
 ===================================================================*/
 
-
 // Blueberry
 #include <berryISelectionService.h>
 #include <berryIWorkbenchWindow.h>
@@ -25,6 +24,7 @@ See LICENSE.txt or http://www.mitk.org for details.
 // Qt
 #include <QMessageBox>
 #include <itksys/SystemTools.hxx>
+#include <QTimer>
 
 // mitk image
 #include <mitkImage.h>
@@ -33,14 +33,14 @@ See LICENSE.txt or http://www.mitk.org for details.
 #include <mitkPointSet.h>
 
 // Widgets
-#include <QmitkNavigationDataSourceSelectionWidget.h>
 #include <QWidget>
+#include <QmitkNavigationDataSourceSelectionWidget.h>
 
 // Window
 #include "QmitkRegisterClasses.h"
 #include "QmitkRenderWindow.h"
 
-//DataStorage
+// DataStorage
 #include <mitkCone.h>
 #include <mitkCylinder.h>
 #include <mitkDataNode.h>
@@ -48,7 +48,7 @@ See LICENSE.txt or http://www.mitk.org for details.
 #include <mitkRenderWindow.h>
 #include <mitkStandaloneDataStorage.h>
 
-//Initialisierung
+// Initialisierung
 // Initialisierung der Werte für die Distanzmessung
 double startvalues[] = {
   0, 0, 0};             // da der Button zweimal gedrückt werden muss für Pos 1 und Pos2 muss sich der Wert ändern
@@ -63,6 +63,8 @@ void PluginProject::SetFocus()
 {
   m_Controls.buttonPerformImageProcessing->setFocus();
   m_Controls.buttonTracking->setFocus();
+  m_Controls.buttonPathTracking->setFocus();
+  m_Controls.buttonStopTracking->setFocus();
 }
 
 void PluginProject::CreateQtPartControl(QWidget *parent)
@@ -71,11 +73,13 @@ void PluginProject::CreateQtPartControl(QWidget *parent)
   m_Controls.setupUi(parent);
   connect(m_Controls.buttonPerformImageProcessing, &QPushButton::clicked, this, &PluginProject::DoImageProcessing);
   connect(m_Controls.buttonTracking, &QPushButton::clicked, this, &PluginProject::DoTracking);
+  connect(m_Controls.buttonPathTracking, &QPushButton::clicked, this, &PluginProject::TimerTracking);
+  connect(m_Controls.buttonStopTracking, &QPushButton::clicked, this, &PluginProject::StopTracking);
   m_Controls.YourWidget;
 }
 
 void PluginProject::OnSelectionChanged(berry::IWorkbenchPart::Pointer /*source*/,
-                                                const QList<mitk::DataNode::Pointer> &nodes)
+                                       const QList<mitk::DataNode::Pointer> &nodes)
 {
   // iterate all selected objects, adjust warning visibility
   foreach (mitk::DataNode::Pointer node, nodes)
@@ -151,7 +155,7 @@ void PluginProject::DoTracking()
     a[1] = Pos1.GetElement(1);
     a[2] = Pos1.GetElement(2);
 
-	//Aenderung des Button Textes
+    // Aenderung des Button Textes
     m_Controls.buttonTracking->setText("press again to set second point");
   }
 
@@ -194,7 +198,7 @@ void PluginProject::DoTracking()
 
     startvalues[0] = 0; // damit die nächste Positionsmessung wieder in Pos1 gespeichert wird
 
-	//Aenderung des Button textes
+    // Aenderung des Button textes
     m_Controls.buttonTracking->setText("press to set the first point for distance measurement");
 
     // VISUALISIERUNG
@@ -230,4 +234,52 @@ void PluginProject::DoTracking()
     mitk::BaseGeometry::Pointer geometry = timeGeometry->GetGeometryForTimeStep(0);
     mitk::RenderingManager::GetInstance()->InitializeViews(geometry);
   }
+}
+
+//Methode zum Starten des Timers und Initialisierens des PointSets
+void PluginProject::TimerTracking()
+{
+  // DataStorage initalisieren
+  DS = mitk::StandaloneDataStorage::New();
+
+  //PointSet erstellen
+  PointSetTracking = mitk::PointSet::New();
+
+  //DataNode erstellen
+  myDN = mitk::DataNode::New();
+  myDN->SetName("PathTracking");
+  myDN->SetData(PointSetTracking);
+
+  //DataNode der DataStorage hinzufügen
+  this->GetDataStorage()->Add(myDN);
+  DS->Add(myDN);
+
+  //Timer initialisieren und starten
+  timer = new QTimer(this);
+  connect(timer, SIGNAL(timeout()), this, SLOT(PathTracking()));
+  timer->start(1000);
+}
+
+// Methode zum Abrufen der aktuellen Position und zur Visualisierung über ein PointSet
+void PluginProject::PathTracking()
+{
+//Positionsdaten abrufen und als 3D Punkt speichern
+  mitk::Point3D ToolPoint(m_Controls.YourWidget->GetSelectedNavigationDataSource()->GetOutput(0)->GetPosition());
+  
+ //Größe der PointSets auf 10 änderen
+  myDN->SetProperty("pointsize", mitk::FloatProperty::New(10));
+
+ //Neuer Punkt dem PointSet hinzufügen
+  PointSetTracking->InsertPoint(ToolPoint);
+
+ //Visualisieren des PonitSets
+  auto geo = DS->ComputeBoundingGeometry3D(DS->GetAll());
+  mitk::RenderingManager::GetInstance()->InitializeViews(geo);
+
+}
+
+//Methode zum Stoppen des PathTrackings
+void PluginProject::StopTracking()
+{
+  timer->stop();
 }
