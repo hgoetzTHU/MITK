@@ -214,25 +214,19 @@ void PluginProject::DoTracking()
     myDataNode->SetName("MyNode");
     myDataNode->SetData(myPointSet);
 
-    // Render Window
+    // DataStorage erstellen
     mitk::StandaloneDataStorage::Pointer dataStorage = mitk::StandaloneDataStorage::New();
-    mitk::RenderWindow::Pointer renderWindow = mitk::RenderWindow::New();
-
+   
     // DataNode der DataStorage hinzufügen
     this->GetDataStorage()->Add(myDataNode);
     dataStorage->Add(myDataNode);
 
-    // 3D renderwindow
-    renderWindow->GetRenderer()->SetMapperID(mitk::BaseRenderer::Standard3D);
-    renderWindow->GetRenderer()->SetDataStorage(dataStorage);
+	// Größe der PointSets auf 10 änderen
+    myDataNode->SetProperty("pointsize", mitk::FloatProperty::New(10));
 
-    // Update render window
-    renderWindow->GetVtkRenderWindow()->Render();
-    mitk::RenderingManager::GetInstance()->RequestUpdateAll();
-
+	// Visualisierung
     auto timeGeometry = dataStorage->ComputeBoundingGeometry3D(dataStorage->GetAll());
-    mitk::BaseGeometry::Pointer geometry = timeGeometry->GetGeometryForTimeStep(0);
-    mitk::RenderingManager::GetInstance()->InitializeViews(geometry);
+    
   }
 }
 
